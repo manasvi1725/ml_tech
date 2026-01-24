@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+requests
+pandas
+numpy
+requests
+networkx
+matplotlib
+pyvis
+google-search-results
+google-genai
+pydantic
+python-dotenv
