@@ -54,11 +54,18 @@ def run_pipeline(
 
         # 2️⃣ run pipeline and CAPTURE output
         result = subprocess.run(
-            ["python", "run_pipeline.py", tech],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+    ["python", "run_pipeline.py", tech],
+    capture_output=True,
+    text=True,
+)
+
+print("STDOUT:", result.stdout, file=sys.stderr)
+print("STDERR:", result.stderr, file=sys.stderr)
+print("RETURN CODE:", result.returncode, file=sys.stderr)
+
+if result.returncode != 0:
+    raise RuntimeError("Pipeline failed")
+
 
         # 3️⃣ parse JSON output
         ml_output = json.loads(result.stdout)
