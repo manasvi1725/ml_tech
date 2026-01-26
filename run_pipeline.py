@@ -665,8 +665,7 @@ def serialize_knowledge_graph(G):
 # ================== PIPELINE ==================
 
 def run_pipeline_for_tech(tech: str):
-    print(f"Running pipeline for: {tech}")
-
+    print("Running pipeline for:", tech, file=sys.stderr)
     try:
         # ================== 1. FETCH ==================
         patents_df   = clean_df(pd.DataFrame(fetch_patents(tech)), ["title"])
@@ -742,7 +741,8 @@ def run_pipeline_for_tech(tech: str):
         }
 
     except Exception as e:
-        print(f" Pipeline failed for {tech}: {e}")
+        print(f"[PIPELINE ERROR] Pipeline failed for {tech}: {e}", file=sys.stderr)
+
 
         # ✅ GUARANTEED SAFE FALLBACK
         return {
@@ -1295,4 +1295,4 @@ if __name__ == "__main__":
     }
 
     # 🚨 IMPORTANT: print ONLY JSON, nothing else
-    print(json.dumps(final_output, ensure_ascii=False))
+    print(json.dumps(final_output, ensure_ascii=False),flush=True)
