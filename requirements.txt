@@ -11,3 +11,4 @@ google-search-results
 google-genai
 pydantic
 python-dotenv
+pymongo

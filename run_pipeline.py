@@ -1151,7 +1151,7 @@ LENGTH RULES:
 
 # ================== JSON EXPORT ==================
 
-def export_dashboard_json(tech: str, result: dict):
+def export_dashboard_json(tech: str, result: dict) -> dict:
     if not isinstance(result, dict):
         raise RuntimeError(
             f"export_dashboard_json received invalid result for '{tech}': {type(result)}"
@@ -1165,9 +1165,6 @@ def export_dashboard_json(tech: str, result: dict):
     market    = result.get("market", pd.DataFrame())
     trend_pat = result.get("patents_year", pd.DataFrame())
     forecast  = result.get("market_forecast")
-    #summary_text = generate_summary(tech)
-    
-
 
     def safe(val):
         if isinstance(val, float):
@@ -1176,15 +1173,13 @@ def export_dashboard_json(tech: str, result: dict):
 
     output = {
         "technology": tech_key,
-        # "overview":{ "text":summary_text},
-        # ================= SUMMARY =================
+
         "summary": {
             "trl": (
                 int(patents["trl"].median())
                 if isinstance(patents, pd.DataFrame) and "trl" in patents and not patents.empty
                 else 2
             ),
-
             "growth_stage": result.get("hype_stage", "Unknown"),
             "market_size_billion_usd": (
                 safe(max(forecast["billions"])) if forecast and "billions" in forecast else None
@@ -1192,7 +1187,6 @@ def export_dashboard_json(tech: str, result: dict):
             "signals": int(len(patents)) if isinstance(patents, pd.DataFrame) else 0,
         },
 
-        # ================= TRENDS =================
         "trend_curve": (
             trend_pat["count"].astype(int).tolist()
             if isinstance(trend_pat, pd.DataFrame) and not trend_pat.empty
@@ -1216,7 +1210,6 @@ def export_dashboard_json(tech: str, result: dict):
             else []
         ),
 
-        # ================= ENTITIES =================
         "entities": {
             "patents": [
                 {
@@ -1233,7 +1226,7 @@ def export_dashboard_json(tech: str, result: dict):
                 {
                     "title": r.get("title"),
                     "snippet": r.get("snippet"),
-                    "link":safe( r.get("link")),
+                    "link": safe(r.get("link")),
                     "year": safe(r.get("year")),
                 }
                 for _, r in papers.iterrows()
@@ -1261,7 +1254,6 @@ def export_dashboard_json(tech: str, result: dict):
             ] if isinstance(market, pd.DataFrame) else [],
         },
 
-        # ================= ALERTS =================
         "alerts": [
             {
                 "type": "patent",
@@ -1271,13 +1263,7 @@ def export_dashboard_json(tech: str, result: dict):
         ],
     }
 
-    os.makedirs("data/tech", exist_ok=True)
-    out_path = f"data/tech/{tech_key}.json"
-
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
-
-    print(f"Dashboard JSON written: {out_path}")
+    return output
 
 
 def export_kg_json(tech: str, result: dict):
@@ -1286,15 +1272,10 @@ def export_kg_json(tech: str, result: dict):
         return
 
     tech_key = tech.lower().replace(" ", "_")
-    kg = result["knowledge_graph"]
+    return result.get("knowledge_graph")
 
-    os.makedirs("data/tech", exist_ok=True)
-    out_path = f"data/tech/{tech_key}_kg.json"
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(kg, f, indent=2, ensure_ascii=False)
-
-    print(f"Knowledge Graph JSON written: {out_path}")
+    
 
 
 
@@ -1302,7 +1283,16 @@ def export_kg_json(tech: str, result: dict):
 
 if __name__ == "__main__":
     tech = sys.argv[1]
+
     result = run_pipeline_for_tech(tech)
-    export_dashboard_json(tech, result)
-    export_kg_json(tech, result)
-    print(" ML pipeline completed")
+
+    dashboard = export_dashboard_json(tech, result)
+    kg = export_kg_json(tech, result)
+
+    final_output = {
+        "dashboard": dashboard,
+        "knowledge_graph": kg,
+    }
+
+    # 🚨 IMPORTANT: print ONLY JSON, nothing else
+    print(json.dumps(final_output, ensure_ascii=False))
