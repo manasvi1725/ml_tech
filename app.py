@@ -1,3 +1,5 @@
+print("🔥🔥🔥 ML APP STARTED - VERSION 2026-01-26 🔥🔥🔥", flush=True)
+
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 import os
