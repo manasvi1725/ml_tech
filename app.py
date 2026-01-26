@@ -3,15 +3,15 @@ from pydantic import BaseModel
 import os
 import subprocess
 import json
+import sys
 from pymongo import MongoClient
 
 app = FastAPI()
 
 INTERNAL_TOKEN = os.getenv("ML_INTERNAL_TOKEN")
-
 MONGODB_URI = os.getenv("MONGODB_URI")
 DB_NAME = os.getenv("MONGODB_DB", "techintel")
-COLLECTION_NAME = os.getenv("MONGODB_COLLECTION", "technology")
+COLLECTION_NAME = os.getenv("MONGODB_COLLECTION", "technologies")
 
 
 class RunRequest(BaseModel):
@@ -33,44 +33,42 @@ def health():
 
 
 @app.post("/run")
-def run_pipeline(
-    payload: RunRequest,
-    x_internal_token: str = Header(default="")
-):
-    # 🔐 protect service
+def run_pipeline(payload: RunRequest, x_internal_token: str = Header(default="")):
     if INTERNAL_TOKEN and x_internal_token != INTERNAL_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    tech = payload.tech.strip().lower().replace(" ", "_")
+    # 🚨 DO NOT re-normalize — backend already did
+    tech = payload.tech
+
+    collection = get_collection()
 
     try:
         # 1️⃣ mark ML as running
-        collection = get_collection()
         collection.update_one(
             {"name": tech},
             {"$set": {"ml_status": "running"}},
             upsert=True,
         )
 
-        # 2️⃣ run pipeline and CAPTURE output
+        # 2️⃣ run pipeline
         result = subprocess.run(
-    ["python", "run_pipeline.py", tech],
-    capture_output=True,
-    text=True,
-)
+            ["python", "run_pipeline.py", tech],
+            capture_output=True,
+            text=True,
+        )
 
-print("STDOUT:", result.stdout, file=sys.stderr)
-print("STDERR:", result.stderr, file=sys.stderr)
-print("RETURN CODE:", result.returncode, file=sys.stderr)
+        # 3️⃣ DEBUG OUTPUT (stderr only)
+        print("STDOUT:", result.stdout, file=sys.stderr)
+        print("STDERR:", result.stderr, file=sys.stderr)
+        print("RETURN CODE:", result.returncode, file=sys.stderr)
 
-if result.returncode != 0:
-    raise RuntimeError("Pipeline failed")
+        if result.returncode != 0:
+            raise RuntimeError("Pipeline failed")
 
-
-        # 3️⃣ parse JSON output
+        # 4️⃣ parse JSON
         ml_output = json.loads(result.stdout)
 
-        # 4️⃣ store result in MongoDB
+        # 5️⃣ store result
         collection.update_one(
             {"name": tech},
             {
@@ -82,17 +80,20 @@ if result.returncode != 0:
             upsert=True,
         )
 
-        return {
-            "ok": True,
-            "tech": tech,
-            "status": "stored",
-        }
+        return {"ok": True, "tech": tech, "status": "stored"}
 
     except Exception as e:
-        # mark ML as failed
+        print(f"[ML ERROR] {e}", file=sys.stderr)
+
         collection.update_one(
             {"name": tech},
-            {"$set": {"ml_status": "failed", "error": str(e)}},
+            {
+                "$set": {
+                    "ml_status": "failed",
+                    "error": str(e),
+                }
+            },
             upsert=True,
         )
+
         raise HTTPException(status_code=500, detail=str(e))
