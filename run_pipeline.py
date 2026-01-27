@@ -1274,15 +1274,22 @@ def export_kg_json(tech: str, result: dict):
     tech_key = tech.lower().replace(" ", "_")
     return result.get("knowledge_graph")
 
+
 def sanitize_json(obj):
-    if isinstance(obj, float):
+    if isinstance(obj, (np.floating, float)):
         if math.isnan(obj) or math.isinf(obj):
             return None
-        return obj
+        return float(obj)
+
+    if isinstance(obj, (np.integer, int)):
+        return int(obj)
+
     if isinstance(obj, dict):
         return {k: sanitize_json(v) for k, v in obj.items()}
+
     if isinstance(obj, list):
         return [sanitize_json(v) for v in obj]
+
     return obj
 
 # ================== ENTRY ==================
@@ -1300,8 +1307,14 @@ if __name__ == "__main__":
         "knowledge_graph": kg,
     }
 
-    # 🚨 IMPORTANT: print ONLY JSON, nothing else
     safe_output = sanitize_json(final_output)
+
+    try:
+        json.dumps(safe_output)
+    except Exception as e:
+        print("[FATAL JSON ERROR]", e, file=sys.stderr)
+        sys.exit(1)
+
     print(json.dumps(safe_output, ensure_ascii=False), flush=True)
 
     
