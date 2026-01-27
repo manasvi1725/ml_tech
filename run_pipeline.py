@@ -9,7 +9,7 @@ import numpy as np
 from serpapi import GoogleSearch
 import networkx as nx
 import requests
-
+import math
 
 
 # ================== CONFIG ==================
@@ -1274,10 +1274,16 @@ def export_kg_json(tech: str, result: dict):
     tech_key = tech.lower().replace(" ", "_")
     return result.get("knowledge_graph")
 
-
-    
-
-
+def sanitize_json(obj):
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize_json(v) for v in obj]
+    return obj
 
 # ================== ENTRY ==================
 
@@ -1295,4 +1301,7 @@ if __name__ == "__main__":
     }
 
     # 🚨 IMPORTANT: print ONLY JSON, nothing else
-    print(json.dumps(final_output, ensure_ascii=False),flush=True)
+    safe_output = sanitize_json(final_output)
+    print(json.dumps(safe_output, ensure_ascii=False), flush=True)
+
+    
