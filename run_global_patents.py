@@ -116,7 +116,7 @@ def run_global_patent_pipeline():
 def export_global_patents_json():
     result = run_global_patent_pipeline()
     
-    json.dumps(result, ensure_ascii=False))
+    print(json.dumps(result, ensure_ascii=False)))
     print("global patents dumped from ML -> backend")
 
 # ================== ENTRY POINT ==================
