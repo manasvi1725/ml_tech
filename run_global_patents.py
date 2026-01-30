@@ -76,7 +76,7 @@ def fetch_global_patents(num_per_field=10):
             for p in patents:
                 link = p.get("patent_link")
 
-                # ❌ Drop patents without a canonical link
+                # Drop patents without a canonical link
                 if not link:
                     continue
 
@@ -90,7 +90,7 @@ def fetch_global_patents(num_per_field=10):
                     "signal_type": "patent",
                     "year": year,
                     "assignee": p.get("assignee"),
-                    "link": link,              # ✅ always present
+                    "link": link,              # always present
                     "pdf_link": extract_patent_pdf(p),  # optional
                 })
 
@@ -102,7 +102,7 @@ def fetch_global_patents(num_per_field=10):
 
 # ================== PIPELINE ==================
 def run_global_patent_pipeline():
-    print("📜 Fetching global patents...")
+    print("Fetching global patents...")
 
     patents = fetch_global_patents()
 

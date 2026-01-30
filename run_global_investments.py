@@ -142,7 +142,7 @@ def normalize_country_investments(country_block):
 
 # ================== PIPELINE ==================
 def run_global_pulse():
-    print("🚀 Running Global Investment Pulse pipeline...")
+    print("Running Global Investment Pulse pipeline...")
 
     output = {
         "generated_at": pd.Timestamp.utcnow().isoformat(),

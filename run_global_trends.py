@@ -67,7 +67,7 @@ def fetch_global_trends(num_per_field=10, days=7):
                 title = n.get("title")
                 link = n.get("link")
 
-                # ❌ Drop useless entries
+                #Drop useless entries
                 if not title or not link:
                     continue
 
@@ -82,7 +82,7 @@ def fetch_global_trends(num_per_field=10, days=7):
                 })
 
         except Exception as e:
-            print(f"❌ News fetch error for '{field}':", e)
+            print(f"News fetch error for '{field}':", e)
 
     return records
 
