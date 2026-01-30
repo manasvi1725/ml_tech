@@ -67,3 +67,36 @@ def refresh_all(token: str = Header(None)):
 
     subprocess.run(["python", "refresh_all.py"], check=True)
     return {"status": "ok"}
+
+
+
+
+def run_script(script_name: str):
+    result = subprocess.run(
+        ["python", script_name],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    return json.loads(result.stdout)
+
+@app.post("/internal/run-global")
+def run_global(authorization: str = Header(None)):
+    if authorization != f"Bearer {ML_TOKEN}":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    try:
+        trends = run_script("run_global_trends.py")
+        patents = run_script("run_global_patents.py")
+        investments = run_script("run_global_investments.py")
+
+        return {
+            "global": {
+                "trends": trends,
+                "patents": patents,
+                "investments": investments,
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

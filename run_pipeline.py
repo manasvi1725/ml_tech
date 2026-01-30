@@ -1109,7 +1109,6 @@ def generate_summary(tech: str) -> str:
     """
     from google import genai
 
-    # API_KEY = "AIzaSyBEXEQZyaiISWUphnTdBxoVChzr20w61vE"
 
     prompt = f"""
 Write a precise, textbook-style technical explanation of {tech}.
@@ -1316,4 +1315,4 @@ if __name__ == "__main__":
         print("[FATAL JSON ERROR]", e, file=sys.stderr)
         sys.exit(1)
 
-    print(json.dumps(safe_output, ensure_ascii=False), flush=True)git
+    print(json.dumps(safe_output, ensure_ascii=False), flush=True)

@@ -102,7 +102,9 @@ def run_global_trends_pipeline():
 def export_global_trends_json():
     result = run_global_trends_pipeline()
 
-    print(json.dumps(result, ensure_ascii=False))
+    
+    json.dumps(result, ensure_ascii=False))
+    print("json file dumped from ML -> backend")
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

@@ -107,12 +107,10 @@ def export_patents_by_institute():
         "patents": all_patents
     }
 
-    out_path = os.path.join(OUTPUT_DIR, "patents.json")
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2)
+    
+    json.dumps(output, ensure_ascii=False))
+    print("json file dumped from ML -> backend")
 
-    print("\n✅ Done!")
-    print("📄 Output file:", os.path.abspath(out_path))
     print("📦 Total patents:", len(all_patents))
 
 

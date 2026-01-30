@@ -115,14 +115,9 @@ def run_global_patent_pipeline():
 # ================== EXPORT ==================
 def export_global_patents_json():
     result = run_global_patent_pipeline()
-
-    os.makedirs("data/global", exist_ok=True)
-    path = "data/global/global_patents.json"
-
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
-
-    print(f"✅ Global patents written → {path}")
+    
+    json.dumps(result, ensure_ascii=False))
+    print("json file dumped from ML -> backend")
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

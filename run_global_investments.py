@@ -160,14 +160,10 @@ def run_global_pulse():
 # ================== EXPORT ==================
 def export_global_pulse_json():
     result = run_global_pulse()
-
-    os.makedirs("data/global", exist_ok=True)
-    path = "data/global/global_tech_pulse.json"
-
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
-
-    print(f"\n✅ Global tech pulse written to {path}")
+    
+    json.dump(result, f, indent=2, ensure_ascii=False)
+    print("json transferred from ML to Backend")
+    
 
 
 # ================== ENTRY ==================

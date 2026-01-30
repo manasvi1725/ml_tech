@@ -149,7 +149,6 @@ def fetch_field_publications(field, keywords):
 # ================== EXPORT ==================
 
 def export_india_fields_json():
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     output = {
         "country": "India",
@@ -166,11 +165,9 @@ def export_india_fields_json():
             }
         }
 
-    out_path = f"{OUTPUT_DIR}/india_publications_fields.json"
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+   
+    json.dump(output, f, indent=2, ensure_ascii=False)
 
-    print(f"✅ India publications JSON written → {out_path}")
 
 # ================== ENTRY ==================
 
