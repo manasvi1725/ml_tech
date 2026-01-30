@@ -15,7 +15,7 @@ import math
 # ================== CONFIG ==================
 
 SERPAPI_KEY = os.getenv("SERPAPI_API_KEY")
-
+API_KEY=os.getenv("GEMINI_API_KEY")
 if not SERPAPI_KEY:
     raise RuntimeError("SERPAPI_API_KEY missing")
 
@@ -1109,7 +1109,7 @@ def generate_summary(tech: str) -> str:
     """
     from google import genai
 
-    API_KEY = "AIzaSyAXuTc4NYR8X9Lwv5DXMOmn-Ee3vQDEXf8"
+    # API_KEY = "AIzaSyBEXEQZyaiISWUphnTdBxoVChzr20w61vE"
 
     prompt = f"""
 Write a precise, textbook-style technical explanation of {tech}.
@@ -1165,6 +1165,7 @@ def export_dashboard_json(tech: str, result: dict) -> dict:
     market    = result.get("market", pd.DataFrame())
     trend_pat = result.get("patents_year", pd.DataFrame())
     forecast  = result.get("market_forecast")
+    summary_text=generate_summary(tech)
 
     def safe(val):
         if isinstance(val, float):
@@ -1173,7 +1174,7 @@ def export_dashboard_json(tech: str, result: dict) -> dict:
 
     output = {
         "technology": tech_key,
-
+        "overview":{"text":summary_text},
         "summary": {
             "trl": (
                 int(patents["trl"].median())
@@ -1315,6 +1316,4 @@ if __name__ == "__main__":
         print("[FATAL JSON ERROR]", e, file=sys.stderr)
         sys.exit(1)
 
-    print(json.dumps(safe_output, ensure_ascii=False), flush=True)
-
-    
+    print(json.dumps(safe_output, ensure_ascii=False), flush=True)git

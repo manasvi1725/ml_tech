@@ -102,13 +102,7 @@ def run_global_trends_pipeline():
 def export_global_trends_json():
     result = run_global_trends_pipeline()
 
-    os.makedirs("data/global", exist_ok=True)
-    path = "data/global/global_trends.json"
-
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
-
-    print(f"✅ Global trends written → {path}")
+    print(json.dumps(result, ensure_ascii=False))
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":
