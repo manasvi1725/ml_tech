@@ -109,7 +109,7 @@ def export_patents_by_institute():
 
     
     json.dumps(output, ensure_ascii=False))
-    print("json file dumped from ML -> backend")
+    print("indian patents dumped from ML -> backend")
 
     print("📦 Total patents:", len(all_patents))
 

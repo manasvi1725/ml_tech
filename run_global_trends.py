@@ -104,7 +104,7 @@ def export_global_trends_json():
 
     
     json.dumps(result, ensure_ascii=False))
-    print("json file dumped from ML -> backend")
+    print("global trends dumped from ML -> backend")
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

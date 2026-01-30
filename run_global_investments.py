@@ -162,7 +162,7 @@ def export_global_pulse_json():
     result = run_global_pulse()
     
     json.dump(result, f, indent=2, ensure_ascii=False)
-    print("json transferred from ML to Backend")
+    print("global investments dumped from ML to Backend")
     
 
 

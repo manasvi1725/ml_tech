@@ -60,14 +60,6 @@ def run_pipeline(payload: RunRequest, x_internal_token: str = Header(default="")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/internal/refresh-all")
-def refresh_all(token: str = Header(None)):
-    if token != os.getenv("ML_INTERNAL_TOKEN"):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    subprocess.run(["python", "refresh_all.py"], check=True)
-    return {"status": "ok"}
-
 
 
 
@@ -82,7 +74,7 @@ def run_script(script_name: str):
 
 @app.post("/internal/run-global")
 def run_global(authorization: str = Header(None)):
-    if authorization != f"Bearer {ML_TOKEN}":
+    if authorization != f"Bearer {INTERNAL_TOKEN}":
         raise HTTPException(status_code=403, detail="Forbidden")
 
     try:
@@ -95,6 +87,25 @@ def run_global(authorization: str = Header(None)):
                 "trends": trends,
                 "patents": patents,
                 "investments": investments,
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/internal/run-india")
+def run_india(authorization: str = Header(None)):
+    if authorization != f"Bearer {INTERNAL_TOKEN}":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    try:
+        patents = run_script("run_india_patents.py")
+        publications = run_script("run_india_publications.py")
+
+        return {
+            "india": {
+                "patents": patents,
+                "publications": publications,
             }
         }
 
