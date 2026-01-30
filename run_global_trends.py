@@ -82,13 +82,13 @@ def fetch_global_trends(num_per_field=10, days=7):
                 })
 
         except Exception as e:
-            print(f"News fetch error for '{field}':", e)
+            print(f"News fetch error for '{field}':", e,file=sys.stderr)
 
     return records
 
 # ================== PIPELINE ==================
 def run_global_trends_pipeline():
-    print("📰 Fetching global technology trends...")
+    print("Fetching global technology trends...",file=sys.stderr)
 
     trends = fetch_global_trends()
 
@@ -104,7 +104,7 @@ def export_global_trends_json():
 
     
     print(json.dumps(result, ensure_ascii=False))
-    print("global trends dumped from ML -> backend")
+    print("global trends dumped from ML -> backend",file=sys.stderr)
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

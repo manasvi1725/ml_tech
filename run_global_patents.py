@@ -96,7 +96,7 @@ def fetch_global_patents(num_per_field=10):
 
 
         except Exception as e:
-            print(f"❌ SerpAPI error for field '{field}':", e)
+            print(f"SerpAPI error for field '{field}':", e,file=sys.stderr)
 
     return records
 
@@ -117,7 +117,7 @@ def export_global_patents_json():
     result = run_global_patent_pipeline()
     
     print(json.dumps(result, ensure_ascii=False))
-    print("global patents dumped from ML -> backend")
+    print("global patents dumped from ML -> backend", file=sys.stderr)
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":
