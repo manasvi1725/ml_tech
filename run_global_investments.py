@@ -117,7 +117,7 @@ def fetch_country_investment_news(country_name, country_cfg):
             
 
         except Exception as e:
-            print(f"  ⚠ Failed for {tech}: {e}",file=sys.stderr)
+            print(f" Failed for {tech}: {e}",file=sys.stderr)
             country_block["technologies"][tech] = {
                 "signal_count": 0,
                 "signal_score": 0.0,
@@ -160,7 +160,7 @@ def run_global_pulse():
 def export_global_pulse_json():
     result = run_global_pulse()
     
-    print(json.dump(result, f, indent=2, ensure_ascii=False))
+    print(json.dump(result, indent=2, ensure_ascii=False))
     
 
 
