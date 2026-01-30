@@ -81,7 +81,9 @@ def run_script(script_name: str):
     print("🧪 STDERR:", result.stderr[:500], file=sys.stderr)
 
     if result.returncode != 0:
-        raise RuntimeError("Script crashed")
+        raise RuntimeError(
+            f"{script_name} failed:\n{result.stderr}"
+        )
 
     if not result.stdout.strip():
         raise RuntimeError("Script produced NO stdout")
