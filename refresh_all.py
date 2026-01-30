@@ -2,7 +2,7 @@ import os
 import requests
 import subprocess
 
-BACKEND_API = os.getenv("BACKEND_API_URL")
+BACKEND_API = os.getenv("MONGODB_URI")
 ML_TOKEN = os.getenv("ML_INTERNAL_TOKEN")
 
 HEADERS = {
@@ -36,7 +36,7 @@ def main():
         except Exception as e:
             print(f"❌ Failed {tech}: {e}", flush=True)
 
-    print("✅ Daily refresh completed", flush=True)
+    print("Daily refresh completed", flush=True)
 
 if __name__ == "__main__":
     main()
