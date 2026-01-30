@@ -64,13 +64,30 @@ def run_pipeline(payload: RunRequest, x_internal_token: str = Header(default="")
 
 
 def run_script(script_name: str):
+    script_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        script_name
+    )
+
     result = subprocess.run(
-        ["python", script_name],
+        ["python", script_path],
         capture_output=True,
         text=True,
-        check=True
     )
+
+    print("🧪 SCRIPT:", script_name, file=sys.stderr)
+    print("🧪 RETURN CODE:", result.returncode, file=sys.stderr)
+    print("🧪 STDOUT LEN:", len(result.stdout), file=sys.stderr)
+    print("🧪 STDERR:", result.stderr[:500], file=sys.stderr)
+
+    if result.returncode != 0:
+        raise RuntimeError("Script crashed")
+
+    if not result.stdout.strip():
+        raise RuntimeError("Script produced NO stdout")
+
     return json.loads(result.stdout)
+
 
 @app.post("/internal/run-global")
 def run_global(authorization: str = Header(None)):
