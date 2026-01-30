@@ -102,7 +102,6 @@ def fetch_global_patents(num_per_field=10):
 
 # ================== PIPELINE ==================
 def run_global_patent_pipeline():
-    print("Fetching global patents...")
 
     patents = fetch_global_patents()
 
@@ -117,7 +116,6 @@ def export_global_patents_json():
     result = run_global_patent_pipeline()
     
     print(json.dumps(result, ensure_ascii=False))
-    print("global patents dumped from ML -> backend", file=sys.stderr)
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

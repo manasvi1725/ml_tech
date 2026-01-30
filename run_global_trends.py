@@ -88,7 +88,6 @@ def fetch_global_trends(num_per_field=10, days=7):
 
 # ================== PIPELINE ==================
 def run_global_trends_pipeline():
-    print("Fetching global technology trends...",file=sys.stderr)
 
     trends = fetch_global_trends()
 
@@ -104,7 +103,7 @@ def export_global_trends_json():
 
     
     print(json.dumps(result, ensure_ascii=False))
-    print("global trends dumped from ML -> backend",file=sys.stderr)
+
 
 # ================== ENTRY POINT ==================
 if __name__ == "__main__":

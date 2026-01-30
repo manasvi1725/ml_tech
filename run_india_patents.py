@@ -74,7 +74,7 @@ def export_patents_by_institute():
     by_institute = {}
 
     for institute in INDIAN_INSTITUTES:
-        print(f"Fetching patents for: {institute}",file=sys.stderr)
+        
         results = fetch_patents_for_institute(institute)
 
         records = []
@@ -95,7 +95,6 @@ def export_patents_by_institute():
                 "institute": institute
             })
 
-        print(f"   → {len(records)} patents collected", file=sys.stderr)
 
         by_institute[institute] = records
         all_patents.extend(records)
@@ -108,10 +107,7 @@ def export_patents_by_institute():
     }
 
     
-    print(json.dumps(output, ensure_ascii=False),)
-    print("indian patents dumped from ML -> backend",file=sys.stderr)
-
-    print("Total patents:", len(all_patents),file=sys.stderr)
+    print(json.dumps(output, ensure_ascii=False))
 
 
 # ================= ENTRY =================

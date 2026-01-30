@@ -73,7 +73,7 @@ def fetch_country_investment_news(country_name, country_cfg):
         "technologies": {}
     }
 
-    print(f"\nFetching investment news for {country_name}",file=sys.stderr)
+
 
     for tech, base_query in TECH_QUERIES.items():
         params = {
@@ -114,7 +114,7 @@ def fetch_country_investment_news(country_name, country_cfg):
             country_block["total_signals"] += len(articles)
             country_block["total_score"] += tech_score
 
-            print(f"  • {tech}: {len(articles)} articles | score {tech_score:.2f}",file=sys.stderr)
+            
 
         except Exception as e:
             print(f"  ⚠ Failed for {tech}: {e}",file=sys.stderr)
@@ -142,7 +142,6 @@ def normalize_country_investments(country_block):
 
 # ================== PIPELINE ==================
 def run_global_pulse():
-    print("Running Global Investment Pulse pipeline...",file=sys.stderr)
 
     output = {
         "generated_at": pd.Timestamp.utcnow().isoformat(),
@@ -162,7 +161,6 @@ def export_global_pulse_json():
     result = run_global_pulse()
     
     print(json.dump(result, f, indent=2, ensure_ascii=False))
-    print("global investments dumped from ML to Backend",file=sys.stderr)
     
 
 

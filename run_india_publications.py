@@ -167,7 +167,7 @@ def export_india_fields_json():
 
     
     print(json.dump(output, f, indent=2, ensure_ascii=False))
-    print("indian publications dumped from ML -> backend", file=sys.stderr)
+
 
 # ================== ENTRY ==================
 
