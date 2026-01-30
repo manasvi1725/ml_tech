@@ -160,7 +160,7 @@ def run_global_pulse():
 def export_global_pulse_json():
     result = run_global_pulse()
     
-    print(json.dump(result, indent=2, ensure_ascii=False))
+    print(json.dumps(result, indent=2, ensure_ascii=False))
     
 
 
