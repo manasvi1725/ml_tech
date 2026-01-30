@@ -89,26 +89,30 @@ def run_script(script_name: str):
     return json.loads(result.stdout)
 
 
-@app.post("/internal/run-global")
-def run_global(authorization: str = Header(None)):
+@app.post("/internal/run-global-investments")
+def run_global_investments(authorization: str = Header(None)):
     if authorization != f"Bearer {INTERNAL_TOKEN}":
-        raise HTTPException(status_code=403, detail="Forbidden")
+        raise HTTPException(status_code=403)
 
-    try:
-        trends = run_script("run_global_trends.py")
-        patents = run_script("run_global_patents.py")
-        investments = run_script("run_global_investments.py")
+    data = run_script("run_global_investments.py")
+    return { "investments": data }
 
-        return {
-            "global": {
-                "trends": trends,
-                "patents": patents,
-                "investments": investments,
-            }
-        }
+@app.post("/internal/run-global-patents")
+def run_global_patents(authorization: str = Header(None)):
+    if authorization != f"Bearer {INTERNAL_TOKEN}":
+        raise HTTPException(status_code=403)
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    data = run_script("run_global_patents.py")
+    return { "patents": data }
+
+@app.post("/internal/run-global-trends")
+def run_global_trends(authorization: str = Header(None)):
+    if authorization != f"Bearer {INTERNAL_TOKEN}":
+        raise HTTPException(status_code=403)
+
+    data = run_script("run_global_trends.py")
+    return { "trends": data }
+
 
 @app.post("/internal/run-india")
 def run_india(authorization: str = Header(None)):
